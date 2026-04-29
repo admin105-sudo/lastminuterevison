@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LastMin Prep ⚡</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07070f;
+    --surface: #0f0f1a;
+    --card: #13131f;
+    --border: #1e1e32;
+    --accent: #00e5ff;
+    --purple: #7c3aed;
+    --gold: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --muted: #4a5568;
+    --nav-h: 56px;
+    --tab-h: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding-bottom: calc(var(--tab-h) + 16px);
+    overflow-x: hidden;
+  }
+
+  /* ====== TOP NAV ====== */
+  .top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(7,7,15,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .logo em { color: var(--purple); font-style: normal; }
+
+  .search-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px 8px 32px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-icon {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 0.9rem;
+    pointer-events: none;
+  }
+
+  .flash-btn-top {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* ====== BOTTOM TAB BAR ====== */
+  .bottom-tabs {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--tab-h);
+    background: rgba(7,7,15,0.97);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+  }
+
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    transition: color 0.2s;
+    padding: 6px 0;
+  }
+
+  .tab-item .ti { font-size: 1.2rem; }
+  .tab-item.active { color: var(--accent); }
+
+  /* ====== SCROLL PROGRESS ====== */
+  .progress-line {
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    z-index: 99;
+    transition: width 0.1s;
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  /* ====== MAIN CONTENT ====== */
+  main {
+    padding-top: calc(var(--nav-h) + 12px);
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* ====== VIEWS ====== */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ====== HOME VIEW ====== */
+  .hero-mobile {
+    text-align: center;
+    padding: 20px 0 16px;
+  }
+
+  .hero-mobile h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--purple), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .hero-mobile p { color: var(--muted); font-size: 0.82rem; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  .stat-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px 4px;
+  }
+
+  .stat-num { font-size: 1.3rem; font-weight: 800; color: var(--accent); font-family: 'Space Mono', monospace; line-height: 1; }
+  .stat-lbl { font-size: 0.58rem; color: var(--muted); margin-top: 3px; line-height: 1.2; }
+
+  .filter-chips {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 14px;
+    scrollbar-width: none;
+  }
+
+  .filter-chips::-webkit-scrollbar { display: none; }
+
+  .fchip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .fchip.on {
+    background: rgba(0,229,255,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(0,229,255,0.3);
+  }
+
+  /* ====== TOPIC CARDS ====== */
+  .topic-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .topic-card.open { border-color: rgba(0,229,255,0.35); }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .c-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .c-title { font-size: 0.9rem; font-weight: 700; flex: 1; line-height: 1.25; }
+  .c-meta { font-size: 0.68rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 2px; }
+  .c-arr { color: var(--muted); font-size: 0.85rem; transition: transform 0.3s; flex-shrink: 0; }
+  .topic-card.open .c-arr { transform: rotate(180deg); }
+
+  .card-body {
+    display: none;
+    padding: 0 14px 14px;
+    animation: fadeSlide 0.25s ease;
+  }
+
+  .topic-card.open .card-body { display: block; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .qa-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .qa-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .q-label {
+    display: flex; align-items: flex-start; gap: 7px;
+    margin-bottom: 8px;
+  }
+
+  .q-badge {
+    background: rgba(245,158,11,0.15);
+    color: var(--gold);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .q-text { font-size: 0.85rem; font-weight: 700; color: var(--gold); line-height: 1.35; }
+  .a-text { font-size: 0.82rem; color: #8896aa; line-height: 1.65; }
+
+  pre {
+    background: #06060f;
+    border-left: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.73rem;
+    color: var(--accent);
+    overflow-x: auto;
+    margin: 8px 0;
+    line-height: 1.7;
+    white-space: pre;
+  }
+
+  code {
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.15);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--accent);
+  }
+
+  .tip-box {
+    background: rgba(124,58,237,0.1);
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    color: #a78bfa;
+    margin-top: 8px;
+    line-height: 1.5;
+    display: flex; gap: 6px;
+  }
+
+  .mini-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.76rem;
+    margin: 8px 0;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .mini-tbl th {
+    background: rgba(0,229,255,0.07);
+    color: var(--accent);
+    padding: 6px 8px;
+    text-align: left;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+  }
+
+  .mini-tbl td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(30,30,50,0.8);
+    color: #8896aa;
+    vertical-align: top;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin: 1px;
+  }
+
+  .chip-g { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+  .chip-r { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+  .chip-b { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+  .chip-y { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.2); }
+
+  /* ====== QUICK REF VIEW ====== */
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 16px 0 8px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .ol-item {
+    display: flex;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    align-items: flex-start;
+    font-size: 0.8rem;
+  }
+
+  .ol-topic {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.75rem;
+    min-width: 80px;
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
+
+  .ol-ans { color: #8896aa; line-height: 1.5; flex: 1; }
+
+  /* ====== FLASHCARD VIEW ====== */
+  .fc-wrap {
+    padding: 12px 0;
+  }
+
+  .fc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .fc-counter {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .fc-dots {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    max-width: 160px;
+    justify-content: flex-end;
+  }
+
+  .fc-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .fc-dot.done { background: var(--green); }
+  .fc-dot.current { background: var(--accent); }
+
+  .fc-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    min-height: 260px;
+    padding: 22px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fc-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(0,229,255,0.07), transparent 70%);
+    border-radius: 50%;
+  }
+
+  .fc-q {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.4;
+    margin-bottom: 18px;
+    min-height: 52px;
+  }
+
+  .fc-a {
+    font-size: 0.85rem;
+    color: #8896aa;
+    line-height: 1.65;
+    display: none;
+    animation: fadeSlide 0.25s ease;
+    background: rgba(0,229,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .fc-a.show { display: block; }
+
+  .fc-tip-box {
+    background: rgba(124,58,237,0.08);
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.77rem;
+    color: #a78bfa;
+    display: none;
+    line-height: 1.5;
+  }
+
+  .fc-tip-box.show { display: block; }
+
+  .fc-label {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: rgba(0,229,255,0.1);
+    color: var(--accent);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .fc-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .fc-action {
+    flex: 1;
+    padding: 14px 10px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .fc-action:active { transform: scale(0.97); }
+  .fc-reveal { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.3); }
+  .fc-next { background: linear-gradient(135deg, var(--purple), #5b21b6); color: white; }
+
+  .fc-swipe-hint {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  /* ====== NO RESULTS ====== */
+  .no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    display: none;
+  }
+
+  .no-results.show { display: block; }
+
+  /* ====== TOAST ====== */
+  .toast {
+    position: fixed;
+    bottom: calc(var(--tab-h) + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--green);
+    color: #000;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    z-index: 200;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-line" id="progressLine" style="width:0%"></div>
+
+<!-- Top Nav -->
+<nav class="top-nav">
+  <div class="logo">⚡<em>LM</em>.prep</div>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Search..." oninput="doSearch(this.value)">
+  </div>
+  <button class="flash-btn-top" onclick="switchView('flash')">⚡ Flash</button>
+</nav>
+
+<!-- Main -->
+<main>
+
+  <!-- ===== HOME VIEW ===== -->
+  <div class="view active" id="v-home">
+    <div class="hero-mobile">
+      <h1>Linux + AWS<br>Last Minute Prep</h1>
+      <p>Tanglish Q&A — Interview ready! 🎯</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-pill"><div class="stat-num">13</div><div class="stat-lbl">Topics</div></div>
+      <div class="stat-pill"><div class="stat-num">40+</div><div class="stat-lbl">Q&A</div></div>
+      <div class="stat-pill"><div class="stat-num">20</div><div class="stat-lbl">Flash Cards</div></div>
+      <div class="stat-pill"><div class="stat-num">33+</div><div class="stat-lbl">One-Liners</div></div>
+    </div>
+
+    <div class="filter-chips" id="filterRow">
+      <button class="fchip on" onclick="filter('all',this)">All</button>
+      <button class="fchip" onclick="filter('linux',this)">🐧 Linux</button>
+      <button class="fchip" onclick="filter('aws',this)">☁️ AWS</button>
+      <button class="fchip" onclick="filter('net',this)">🌐 Network</button>
+      <button class="fchip" onclick="filter('sec',this)">🔐 Security</button>
+      <button class="fchip" onclick="filter('git',this)">🌿 Git</button>
+    </div>
+
+    <div id="cardsContainer">
+
+      <!-- 1. Boot Process -->
+      <div class="topic-card" data-tags="linux">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(16,185,129,0.1)">🚀</div>
+          <div style="flex:1">
+            <div class="c-title">Linux Boot Process</div>
+            <div class="c-meta">5 stages • High priority</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">Linux eppadi boot aaguthu?</span></div>
+            <div class="a-text">
+              <span class="chip chip-b">BIOS/UEFI</span> → <span class="chip chip-b">GRUB</span> → <span class="chip chip-b">Kernel</span> → <span class="chip chip-b">systemd</span> → <span class="chip chip-b">Login</span><br><br>
+              <b>BIOS/UEFI:</b> Hardware check — POST test<br>
+              <b>GRUB:</b> Kernel-ai memory-la load pannuvadhu<br>
+              <b>Kernel:</b> Drivers init, root filesystem mount<br>
+              <b>systemd:</b> PID 1 — parallel services start<br>
+              <b>Login:</b> User login ready
+            </div>
+            <div class="tip-box">💡 One-liner: "BIOS → GRUB → Kernel → systemd → Login"</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">systemd vs init difference?</span></div>
+            <div class="a-text">
+              Old init = Sequential start → SLOW<br>
+              systemd = Parallel start → FAST boot, PID 1
+              <pre>systemctl start nginx
+systemctl enable nginx
+systemctl status nginx</pre>
+            </div>
+            <div class="tip-box">💡 systemd = PID 1, parallel, modern init</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">Root password reset eppadi?</span></div>
+            <div class="a-text">GRUB menu → "e" → linux line-la rd.break add → Ctrl+X
+              <pre>mount -o remount,rw /sysroot
+chroot /sysroot
+passwd root
+touch /.autorelabel
+exit && reboot</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Linux Commands -->
+      <div class="topic-card" data-tags="linux">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(0,229,255,0.1)">⌨️</div>
+          <div style="flex:1">
+            <div class="c-title">Essential Linux Commands</div>
+            <div class="c-meta">ls, top, ps, grep, find...</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">Top 10 commands sollunga</span></div>
+            <div class="a-text">
+              <table class="mini-tbl">
+                <tr><th>Command</th><th>What it does</th></tr>
+                <tr><td><code>ls -la</code></td><td>List all files</td></tr>
+                <tr><td><code>top</code></td><td>Live CPU/RAM monitor</td></tr>
+                <tr><td><code>ps -ef | grep nginx</code></td><td>Find process</td></tr>
+                <tr><td><code>df -h</code></td><td>Disk usage</td></tr>
+                <tr><td><code>free -h</code></td><td>Memory usage</td></tr>
+                <tr><td><code>tail -f /var/log/</code></td><td>Live log watch</td></tr>
+                <tr><td><code>grep "text" file</code></td><td>Search in file</td></tr>
+                <tr><td><code>find /path -name f</code></td><td>Find file</td></tr>
+              </table>
+            </div>
+            <div class="tip-box">💡 CPU: top | htop | vmstat | uptime — indha 4!</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">rm -rf /* enna pannuvadhu?</span></div>
+            <div class="a-text">
+              <span class="chip chip-r">EXTREMELY DANGEROUS!</span><br><br>
+              rm=remove | -r=recursive | -f=force | /*=everything in root<br>
+              Result: OS, apps, data — ellaam wiped! Server destroyed!
+            </div>
+            <div class="tip-box">💡 "I would NEVER run this on any server" — firmly sollu!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. File Permissions -->
+      <div class="topic-card" data-tags="linux sec">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(245,158,11,0.1)">🔒</div>
+          <div style="flex:1">
+            <div class="c-title">File Permissions & chmod</div>
+            <div class="c-meta">rwx | 744 | 755 | 600</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">chmod 744 enna?</span></div>
+            <div class="a-text">
+              3 Groups: User | Group | Others<br>
+              r=4, w=2, x=1<br><br>
+              <table class="mini-tbl">
+                <tr><th>chmod</th><th>Permissions</th><th>Use</th></tr>
+                <tr><td><code>777</code></td><td>rwxrwxrwx</td><td><span class="chip chip-r">Dangerous!</span></td></tr>
+                <tr><td><code>755</code></td><td>rwxr-xr-x</td><td>Web servers</td></tr>
+                <tr><td><code>744</code></td><td>rwxr--r--</td><td>Owner full, others read</td></tr>
+                <tr><td><code>644</code></td><td>rw-r--r--</td><td>Config files</td></tr>
+                <tr><td><code>600</code></td><td>rw-------</td><td>SSH keys</td></tr>
+                <tr><td><code>400</code></td><td>r--------</td><td>AWS .pem key</td></tr>
+              </table>
+            </div>
+            <div class="tip-box">💡 744 = Owner full, Group+Others read only</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. SSH -->
+      <div class="topic-card" data-tags="linux net sec">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(124,58,237,0.1)">🔑</div>
+          <div style="flex:1">
+            <div class="c-title">SSH — Connect & Troubleshoot</div>
+            <div class="c-meta">Port 22 | .pem key | SG</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">EC2-ai SSH connect eppadi?</span></div>
+            <div class="a-text">
+              <pre>chmod 400 key.pem         # First!
+ssh -i key.pem ec2-user@IP # Amazon Linux
+ssh -i key.pem ubuntu@IP   # Ubuntu</pre>
+              Requirements: .pem key + SG port 22 open + Public IP
+            </div>
+            <div class="tip-box">💡 Always chmod 400 first! Marandhuvidaadha!</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">SSH work aagala — troubleshoot?</span></div>
+            <div class="a-text">
+              <table class="mini-tbl">
+                <tr><th>Step</th><th>Check</th></tr>
+                <tr><td>1</td><td><code>systemctl status sshd</code></td></tr>
+                <tr><td>2</td><td><code>netstat -tulnp | grep 22</code></td></tr>
+                <tr><td>3</td><td>Firewall block?</td></tr>
+                <tr><td>4</td><td>AWS SG → Port 22 open?</td></tr>
+                <tr><td>5</td><td><code>chmod 400 key.pem</code></td></tr>
+                <tr><td>6</td><td><code>cat /var/log/secure</code></td></tr>
+              </table>
+            </div>
+            <div class="tip-box">💡 sshd → port → firewall → SG → key → logs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Disk Management -->
+      <div class="topic-card" data-tags="linux">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(16,185,129,0.1)">💾</div>
+          <div style="flex:1">
+            <div class="c-title">Disk Management</div>
+            <div class="c-meta">lsblk | mount | fstab</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">lsblk, mount, fstab explain pannunga</span></div>
+            <div class="a-text">
+              <b>lsblk</b> — Ella disks + partitions list pannuvadhu<br>
+              <b>mount</b> — Disk-ai folder-la attach (USB maadiri!)<br>
+              <b>/etc/fstab</b> — Auto-mount config (restart aanaalum auto mount)
+              <pre>lsblk
+mount /dev/xvdf /mnt
+# /etc/fstab:
+/dev/xvdf /mnt ext4 defaults 0 0</pre>
+            </div>
+            <div class="tip-box">💡 fstab = boot time auto mount config file</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. User Management -->
+      <div class="topic-card" data-tags="linux sec">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(0,229,255,0.1)">👤</div>
+          <div style="flex:1">
+            <div class="c-title">User Management</div>
+            <div class="c-meta">useradd | passwd | usermod</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">User management commands?</span></div>
+            <div class="a-text">
+              <table class="mini-tbl">
+                <tr><th>Command</th><th>Action</th></tr>
+                <tr><td><code>useradd abinaya</code></td><td>New user create</td></tr>
+                <tr><td><code>passwd abinaya</code></td><td>Password set</td></tr>
+                <tr><td><code>userdel -r abinaya</code></td><td>User + home delete</td></tr>
+                <tr><td><code>usermod -aG sudo abinaya</code></td><td>Add to sudo</td></tr>
+                <tr><td><code>usermod -aG docker abinaya</code></td><td>Add to docker</td></tr>
+                <tr><td><code>id abinaya</code></td><td>User ID + groups</td></tr>
+                <tr><td><code>whoami</code></td><td>Current user</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. VPC & Networking -->
+      <div class="topic-card" data-tags="aws net">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(245,158,11,0.1)">🌐</div>
+          <div style="flex:1">
+            <div class="c-title">VPC & Networking</div>
+            <div class="c-meta">Subnets | IGW | NAT | CIDR</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">VPC ennanu?</span></div>
+            <div class="a-text">
+              Virtual Private Cloud — AWS-la private network!<br><br>
+              🏢 Analogy: Apartment complex<br>
+              <span class="chip chip-y">VPC</span> Complex | <span class="chip chip-y">Subnets</span> Floors | <span class="chip chip-y">IGW</span> Main gate | <span class="chip chip-y">NAT</span> Back door | <span class="chip chip-y">Route Table</span> Lifts
+            </div>
+            <div class="tip-box">💡 VPC = isolated private network. IP, subnets, routing naame control.</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">CIDR ennanu?</span></div>
+            <div class="a-text">
+              <table class="mini-tbl">
+                <tr><th>CIDR</th><th>IPs</th><th>Use</th></tr>
+                <tr><td><code>/16</code></td><td>65,536</td><td>Typical VPC</td></tr>
+                <tr><td><code>/24</code></td><td>256</td><td>Typical Subnet</td></tr>
+                <tr><td><code>0.0.0.0/0</code></td><td>All</td><td>Internet route</td></tr>
+              </table>
+            </div>
+            <div class="tip-box">💡 /16=VPC, /24=Subnet. Number sirusu = IPs adhigam!</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">Public IP vs Private IP?</span></div>
+            <div class="a-text">
+              <span class="chip chip-g">Public IP</span> Internet accessible — 3.x.x.x (Web servers)<br>
+              <span class="chip chip-b">Private IP</span> VPC internal — 10.x.x.x (Database, backend)<br><br>
+              Public Subnet → IGW → Internet direct<br>
+              Private Subnet → NAT Gateway → Outbound only
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. EC2 & Auto Scaling -->
+      <div class="topic-card" data-tags="aws">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(124,58,237,0.1)">⚙️</div>
+          <div style="flex:1">
+            <div class="c-title">EC2, Load Balancer & Auto Scaling</div>
+            <div class="c-meta">ALB | NLB | ASG | Scaling types</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">EC2 instance types?</span></div>
+            <div class="a-text">
+              <table class="mini-tbl">
+                <tr><th>Family</th><th>Types</th><th>Use For</th></tr>
+                <tr><td>General</td><td><code>t2,t3,m5</code></td><td>Web, dev/test</td></tr>
+                <tr><td>Compute</td><td><code>c5,c6g</code></td><td>High CPU</td></tr>
+                <tr><td>Memory</td><td><code>r5,x1e</code></td><td>DB, Redis, SAP</td></tr>
+                <tr><td>Storage</td><td><code>i3,d2</code></td><td>Hadoop, NoSQL</td></tr>
+                <tr><td>GPU</td><td><code>p3,g4</code></td><td>ML, AI</td></tr>
+              </table>
+            </div>
+            <div class="tip-box">💡 t2/t3=general, c5=compute, r5=memory — indha 3!</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">ALB vs NLB difference?</span></div>
+            <div class="a-text">
+              <span class="chip chip-b">ALB</span> Layer 7 | HTTP/HTTPS | Path-based routing | Websites, APIs<br><br>
+              <span class="chip chip-y">NLB</span> Layer 4 | TCP/UDP/TLS | High performance | Gaming, finance
+            </div>
+            <div class="tip-box">💡 ALB=L7 HTTP, NLB=L4 TCP high perf</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">Scaling types enna?</span></div>
+            <div class="a-text">
+              <span class="chip chip-r">Vertical</span> Same server CPU/RAM increase — downtime needed<br>
+              <span class="chip chip-g">Horizontal</span> More instances — NO downtime ✅ Cloud best practice!<br>
+              <span class="chip chip-b">Dynamic</span> CloudWatch (CPU &gt; 70% → add instance)<br>
+              <span class="chip chip-y">Scheduled</span> Time-based (9AM scale up)
+            </div>
+            <div class="tip-box">💡 Horizontal = cloud best practice. No downtime!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. IAM -->
+      <div class="topic-card" data-tags="aws sec">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(239,68,68,0.1)">🛡️</div>
+          <div style="flex:1">
+            <div class="c-title">IAM — Identity & Access</div>
+            <div class="c-meta">Users | Roles | Policies | Least Privilege</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">IAM components ennanu?</span></div>
+            <div class="a-text">
+              IAM = WHO can access WHAT — AWS access control<br><br>
+              <span class="chip chip-g">Users</span> Individual accounts<br>
+              <span class="chip chip-b">Groups</span> Collection — share permissions<br>
+              <span class="chip chip-y">Roles</span> Temp permissions for AWS services (no keys!)<br>
+              <span class="chip chip-g">Policies</span> JSON — Allow/Deny actions
+              <pre>{
+  "Effect": "Allow",
+  "Action": "s3:*",
+  "Resource": "*"
+}</pre>
+            </div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">IAM Best Practices?</span></div>
+            <div class="a-text">
+              ✅ Least Privilege — minimum permissions only<br>
+              ✅ Root account daily use pannaadhhe<br>
+              ✅ EC2-ku Roles use — never store keys on server<br>
+              ✅ MFA enable pannu<br>
+              ✅ Unused users/roles delete pannu
+            </div>
+            <div class="tip-box">💡 Least Privilege + MFA + Roles = interviewer impress!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. CloudWatch -->
+      <div class="topic-card" data-tags="aws">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(16,185,129,0.1)">📊</div>
+          <div style="flex:1">
+            <div class="c-title">CloudWatch & Monitoring</div>
+            <div class="c-meta">Metrics | Alarms | Auto Scaling</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">CloudWatch enna monitor pannuvadhu?</span></div>
+            <div class="a-text">
+              <table class="mini-tbl">
+                <tr><th>Metric</th><th>Service</th></tr>
+                <tr><td>CPUUtilization</td><td>EC2</td></tr>
+                <tr><td>NetworkIn/Out</td><td>EC2</td></tr>
+                <tr><td>RequestCount</td><td>ALB/NLB</td></tr>
+                <tr><td>HealthyHostCount</td><td>Load Balancer</td></tr>
+                <tr><td>Invocations/Errors</td><td>Lambda</td></tr>
+                <tr><td>BucketSizeBytes</td><td>S3</td></tr>
+              </table>
+            </div>
+            <div class="tip-box">💡 CloudWatch = monitor + alarms + auto-scale trigger</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. CloudFront & VPC Endpoints -->
+      <div class="topic-card" data-tags="aws net">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(0,229,255,0.1)">🌍</div>
+          <div style="flex:1">
+            <div class="c-title">CloudFront & VPC Endpoints</div>
+            <div class="c-meta">CDN | Edge | Gateway | Interface</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">CloudFront ennanu?</span></div>
+            <div class="a-text">
+              CDN — world-wide edge locations-la cache pannuvadhu<br><br>
+              🌏 Chennai → US website<br>
+              <span class="chip chip-r">Without CF:</span> US server → SLOW<br>
+              <span class="chip chip-g">With CF:</span> Mumbai edge → FAST!<br>
+              400+ edge locations globally
+            </div>
+            <div class="tip-box">💡 CloudFront = CDN, nearest edge cache, latency kuraiuvadhu</div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">VPC Endpoint ennanu?</span></div>
+            <div class="a-text">
+              Private EC2 → AWS services, internet pogaamal!<br><br>
+              <span class="chip chip-g">Gateway Endpoint</span> S3 + DynamoDB only — FREE ✅<br>
+              <span class="chip chip-b">Interface Endpoint</span> Most other services — ENI private IP
+            </div>
+            <div class="tip-box">💡 VPC Endpoint = private + secure + cheaper (no NAT cost)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. AWS Services & Models -->
+      <div class="topic-card" data-tags="aws">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(245,158,11,0.1)">☁️</div>
+          <div style="flex:1">
+            <div class="c-title">AWS Services & Cloud Models</div>
+            <div class="c-meta">IaaS | PaaS | SaaS | On-Prem vs Cloud</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">IaaS vs PaaS vs SaaS?</span></div>
+            <div class="a-text">
+              <span class="chip chip-y">IaaS</span> EC2, EBS, S3, VPC — you manage OS+apps<br>
+              <span class="chip chip-b">PaaS</span> Lambda, RDS, Beanstalk — apps only manage<br>
+              <span class="chip chip-g">SaaS</span> WorkMail, Chime — just use it!
+            </div>
+          </div>
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">On-Prem vs Cloud?</span></div>
+            <div class="a-text">
+              <table class="mini-tbl">
+                <tr><th>Aspect</th><th>On-Prem</th><th>Cloud</th></tr>
+                <tr><td>Cost</td><td>CapEx (upfront)</td><td>OpEx (pay-as-go)</td></tr>
+                <tr><td>Scale</td><td>Slow, manual</td><td>Fast, auto</td></tr>
+                <tr><td>Maintenance</td><td>Company</td><td>Provider</td></tr>
+                <tr><td>Access</td><td>Local</td><td>Global</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. Git -->
+      <div class="topic-card" data-tags="git">
+        <div class="card-head" onclick="toggle(this.parentElement)">
+          <div class="c-icon" style="background:rgba(16,185,129,0.1)">🌿</div>
+          <div style="flex:1">
+            <div class="c-title">Git Branching Workflow</div>
+            <div class="c-meta">init | commit | push | PR</div>
+          </div>
+          <span class="c-arr">▾</span>
+        </div>
+        <div class="card-body">
+          <div class="qa-item">
+            <div class="q-label"><span class="q-badge">Q</span><span class="q-text">Git basic workflow?</span></div>
+            <div class="a-text">
+              <pre>git init
+git add file.txt
+git commit -m "message"
+git remote add origin URL
+git push -u origin master
+
+# Branch create:
+git checkout -b dev
+git push -u origin dev</pre>
+              GitHub-la Pull Request → dev → master merge
+            </div>
+            <div class="tip-box">💡 Always branch! Never push directly to master!</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end cardsContainer -->
+
+    <div class="no-results" id="noResults">
+      <div style="font-size:2.5rem">🔍</div>
+      <p style="margin-top:10px;font-size:0.85rem">No results. Try another keyword!</p>
+    </div>
+  </div>
+
+  <!-- ===== QUICK REF VIEW ===== -->
+  <div class="view" id="v-ref">
+    <div class="section-title">⚡ Rapid One-Liners</div>
+    <div id="olContainer">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- ===== FLASHCARD VIEW ===== -->
+  <div class="view" id="v-flash">
+    <div class="fc-wrap">
+      <div class="fc-header">
+        <div class="fc-counter" id="fcCounter">1 / 20</div>
+        <div class="fc-dots" id="fcDots"></div>
+      </div>
+
+      <div class="fc-card">
+        <span class="fc-label">FLASH CARD</span>
+        <div class="fc-q" id="fcQ">Loading...</div>
+        <div class="fc-a" id="fcA"></div>
+        <div class="fc-tip-box" id="fcTip"></div>
+      </div>
+
+      <div class="fc-btns">
+        <button class="fc-action fc-reveal" id="revealBtn" onclick="reveal()">👁 Show Answer</button>
+        <button class="fc-action fc-next" onclick="nextCard()">Next →</button>
+      </div>
+      <div class="fc-swipe-hint">Tap "Next" to go to next card</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Bottom Tab Bar -->
+<nav class="bottom-tabs">
+  <button class="tab-item active" id="tab-home" onclick="switchView('home')">
+    <span class="ti">📚</span>Topics
+  </button>
+  <button class="tab-item" id="tab-ref" onclick="switchView('ref')">
+    <span class="ti">⚡</span>Quick Ref
+  </button>
+  <button class="tab-item" id="tab-flash" onclick="switchView('flash')">
+    <span class="ti">🃏</span>Flash Cards
+  </button>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+const oneliners = [
+  ["Boot Process","BIOS → GRUB → Kernel → systemd → Login"],
+  ["systemd","PID 1, parallel start, faster boot"],
+  ["chmod 744","rwxr--r-- | Owner full, others read only"],
+  ["chmod 755","rwxr-xr-x | Owner full, others r+x"],
+  ["chmod 600","rw------- | Owner only (SSH keys)"],
+  ["chmod 400","r-------- | Read-only (AWS .pem key)"],
+  ["SSH command","chmod 400 key.pem then ssh -i key.pem ec2-user@IP"],
+  ["SSH port","Port 22 — open in Security Group inbound"],
+  ["SSH troubleshoot","sshd → port 22 → firewall → SG → key → /var/log/secure"],
+  ["Public IP","Internet accessible (3.x.x.x) — web servers"],
+  ["Private IP","VPC internal only (10.x.x.x) — databases"],
+  ["DHCP","Auto IP assign — WiFi-la phone-ku IP varuthu maadiri"],
+  ["DNS check","cat /etc/resolv.conf | nslookup | dig"],
+  ["/etc","System config files"],
+  ["/var","Logs and variable data"],
+  ["/bin","Basic commands (ls, cp, cat)"],
+  ["/tmp","Temp files — cleared on reboot"],
+  ["/boot","Kernel and GRUB bootloader"],
+  ["/proc","Virtual filesystem — kernel info"],
+  ["VPC","Isolated private network in AWS"],
+  ["Public Subnet","Has IGW route → direct internet"],
+  ["Private Subnet","NAT Gateway → outbound only"],
+  ["IGW","Internet Gateway — public subnet to internet"],
+  ["NAT Gateway","Private subnet outbound only"],
+  ["ALB","Layer 7 | HTTP/HTTPS | path-based routing"],
+  ["NLB","Layer 4 | TCP/UDP/TLS | high performance"],
+  ["ASG","Auto add/remove EC2 based on demand"],
+  ["Launch Template","Saved EC2 config (AMI, type, key, SG) for ASG"],
+  ["IAM Role","Temp permissions for AWS services — no keys!"],
+  ["Least Privilege","Minimum permissions only"],
+  ["CloudFront","CDN — nearest edge location cache, fast!"],
+  ["CloudWatch","Monitor + Alarms + Auto-scale trigger"],
+  ["Gateway Endpoint","S3 + DynamoDB — FREE VPC endpoint"],
+  ["CIDR /16","65,536 IPs — typical VPC"],
+  ["CIDR /24","256 IPs — typical subnet"],
+  ["rm -rf /*","NEVER USE — deletes entire filesystem!"],
+  ["EC2 General","t2, t3, m5 — balanced CPU+RAM"],
+  ["EC2 Compute","c5, c6g — high CPU workloads"],
+  ["EC2 Memory","r5, x1e — databases, high RAM"],
+];
+
+const flashcards = [
+  { q:"Linux boot process steps?", a:"BIOS/UEFI → GRUB (loads kernel) → Kernel (init hardware) → systemd (PID 1, parallel) → Login", tip:"5 stages — one-liner podhum!" },
+  { q:"systemd vs init difference?", a:"Old init = sequential (slow). systemd = parallel start (fast), PID 1. Commands: systemctl start/stop/status/enable nginx", tip:"systemd = PID 1, parallel, faster" },
+  { q:"chmod 744 enna?", a:"7=rwx (owner full), 4=r-- (group read), 4=r-- (others read). r=4, w=2, x=1", tip:"Owner full, Group+Others read only" },
+  { q:"SSH connect command + port?", a:"chmod 400 key.pem (first!), then ssh -i key.pem ec2-user@IP. Port 22, SG-la 22 open irukkanum.", tip:"chmod 400 FIRST — always!" },
+  { q:"VPC ennanu? Main components?", a:"Virtual Private Cloud — AWS private network. Components: Subnets, IGW (internet), NAT Gateway (outbound), Route Table, VPC Peering", tip:"Your own isolated network in AWS" },
+  { q:"ALB vs NLB?", a:"ALB = Layer 7, HTTP/HTTPS, path-based routing, websites/APIs. NLB = Layer 4, TCP/UDP/TLS, high performance, gaming/finance", tip:"ALB=L7 HTTP, NLB=L4 TCP" },
+  { q:"IAM Best Practices?", a:"1. Least Privilege 2. No root daily use 3. EC2-ku Roles (no keys on server!) 4. MFA enable 5. Delete unused users/roles", tip:"Least Privilege + MFA + Roles!" },
+  { q:"Horizontal vs Vertical Scaling?", a:"Vertical = Same server CPU/RAM increase, downtime needed. Horizontal = More instances, NO downtime. Cloud best practice = Horizontal!", tip:"Horizontal = cloud way!" },
+  { q:"CloudFront ennanu?", a:"CDN — content world-wide edge locations-la cache pannuvadhu. Chennai user → Mumbai edge (fast!), not US server (slow). 400+ locations.", tip:"CDN = nearest edge = fast!" },
+  { q:"CIDR /16 vs /24 IPs?", a:"/16 = 65,536 IPs (VPC), /24 = 256 IPs (Subnet). Number sirusu = IPs adhigam!", tip:"/16=VPC, /24=Subnet" },
+  { q:"SSH work aagala — troubleshoot order?", a:"1. systemctl status sshd 2. netstat -tulnp | grep 22 3. Firewall check 4. AWS SG port 22 5. chmod 400 key 6. /var/log/secure", tip:"sshd → port → firewall → SG → key → logs" },
+  { q:"IaaS vs PaaS vs SaaS examples?", a:"IaaS: EC2, EBS, S3 (manage OS+apps). PaaS: Lambda, RDS, Beanstalk (manage apps only). SaaS: WorkMail, Chime (just use!)", tip:"Infrastructure, Platform, Software" },
+  { q:"Auto Scaling Group eppadi work aaguthu?", a:"Launch Template = how to launch (AMI, type, key, SG). ASG = when & how many. Dynamic = CloudWatch metric. Scheduled = time-based.", tip:"Template=how, ASG=when+how many" },
+  { q:"VPC Endpoint types?", a:"Gateway Endpoint: S3 + DynamoDB only, FREE! Interface Endpoint: Most other AWS services, uses ENI private IP.", tip:"Gateway=free S3/DynamoDB, Interface=rest" },
+  { q:"rm -rf /* enna pannuvadhu?", a:"EXTREMELY DANGEROUS! Deletes entire filesystem — OS, apps, data everything wiped. Server completely destroyed!", tip:"NEVER run! Firmly tell interviewer this!" },
+  { q:"fstab ennanu?", a:"/etc/fstab = auto-mount config. Format: Device | MountPoint | FileSystem | Options | Dump | Pass. Example: /dev/xvdf /mnt ext4 defaults 0 0", tip:"fstab = boot time auto mount" },
+  { q:"IAM Role vs User?", a:"User = permanent account, has credentials. Role = temporary permissions for AWS services, NO access keys needed. EC2-ku always Role use!", tip:"Role=temp no keys, User=perm+keys" },
+  { q:"On-Prem vs Cloud main difference?", a:"On-Prem: High CapEx upfront, slow manual scale, company maintains. Cloud: OpEx pay-as-go, fast auto scale, provider maintains.", tip:"CapEx vs OpEx — key!" },
+  { q:"Git branching workflow?", a:"git init → git add → git commit → git remote add → git push. Branch: git checkout -b dev → push → Pull Request to merge!", tip:"Always branch, never push to master directly!" },
+  { q:"CloudWatch enna monitor pannuvadhu?", a:"EC2: CPUUtilization, NetworkIn/Out. LB: RequestCount, HealthyHostCount. Lambda: Invocations/Errors. S3: BucketSizeBytes.", tip:"Monitor + alarm + auto-scale trigger" },
+];
+
+// ===== Build one-liners =====
+const olC = document.getElementById('olContainer');
+oneliners.forEach(([t,a]) => {
+  const d = document.createElement('div');
+  d.className = 'ol-item';
+  d.innerHTML = `<span class="ol-topic">${t}</span><span class="ol-ans">${a}</span>`;
+  olC.appendChild(d);
+});
+
+// Build FC dots
+const dotsEl = document.getElementById('fcDots');
+flashcards.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'fc-dot' + (i === 0 ? ' current' : '');
+  d.id = 'dot-' + i;
+  dotsEl.appendChild(d);
+});
+
+// ===== VIEW SWITCHING =====
+let currentView = 'home';
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('v-' + v).classList.add('active');
+  document.getElementById('tab-' + v).classList.add('active');
+  currentView = v;
+  if (v === 'flash') showFC();
+  window.scrollTo(0,0);
+}
+
+// ===== TOGGLE CARD =====
+function toggle(card) {
+  card.classList.toggle('open');
+}
+
+// ===== FILTER =====
+function filter(tag, btn) {
+  document.querySelectorAll('.fchip').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.topic-card').forEach(c => {
+    const tags = c.dataset.tags || '';
+    c.style.display = (tag === 'all' || tags.includes(tag)) ? '' : 'none';
+  });
+}
+
+// ===== SEARCH =====
+function doSearch(val) {
+  const v = val.toLowerCase();
+  const cards = document.querySelectorAll('.topic-card');
+  let found = 0;
+  cards.forEach(c => {
+    const match = c.textContent.toLowerCase().includes(v);
+    c.style.display = match ? '' : 'none';
+    if (match) found++;
+  });
+  document.getElementById('noResults').classList.toggle('show', found === 0 && v.length > 0);
+}
+
+// ===== FLASHCARDS =====
+let fcIdx = 0;
+let revealed = false;
+
+function showFC() {
+  const fc = flashcards[fcIdx];
+  document.getElementById('fcQ').textContent = fc.q;
+  document.getElementById('fcA').textContent = fc.a;
+  document.getElementById('fcA').classList.remove('show');
+  document.getElementById('fcTip').textContent = '💡 ' + fc.tip;
+  document.getElementById('fcTip').classList.remove('show');
+  document.getElementById('fcCounter').textContent = `${fcIdx+1} / ${flashcards.length}`;
+  document.getElementById('revealBtn').style.display = '';
+  revealed = false;
+
+  // dots
+  document.querySelectorAll('.fc-dot').forEach((d,i) => {
+    d.className = 'fc-dot' + (i < fcIdx ? ' done' : i === fcIdx ? ' current' : '');
+  });
+}
+
+function reveal() {
+  document.getElementById('fcA').classList.add('show');
+  document.getElementById('fcTip').classList.add('show');
+  document.getElementById('revealBtn').style.display = 'none';
+  revealed = true;
+}
+
+function nextCard() {
+  fcIdx = (fcIdx + 1) % flashcards.length;
+  showFC();
+  if (fcIdx === 0) showToast('🎉 All done! Starting over...');
+}
+
+// ===== PROGRESS BAR =====
+window.addEventListener('scroll', () => {
+  const s = document.documentElement.scrollTop;
+  const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('progressLine').style.width = (h > 0 ? (s/h*100) : 0) + '%';
+});
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Init
+showFC();
+</script>
+</body>
+</html>
